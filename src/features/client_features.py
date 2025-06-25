@@ -56,8 +56,13 @@ def preprocess_clientes_dataframe(df: pd.DataFrame, is_train: bool = True) -> pd
 
     # One-hot encode ranked categoricals
     cat_cols = [
-        "RANG_INGRESO", "RANG_SDO_PASIVO", "NRO_PRODUCTOS", 
-        "TIPO_REQUERIMIENTO2", "DICTAMEN", "PRODUCTO_SERVICIO_2", "SUBMOTIVO_2"
+    "RANG_INGRESO",
+    "RANG_SDO_PASIVO_MENOS0",
+    "RANG_NRO_PRODUCTOS_MENOS0",
+    "TIPO_REQUERIMIENTO2",
+    "DICTAMEN",
+    "PRODUCTO_SERVICIO_2",
+    "SUBMOTIVO_2"
     ]
     cat_cols = [col for col in cat_cols if col in df.columns]
     df = pd.get_dummies(df, columns=cat_cols)
@@ -72,5 +77,16 @@ def preprocess_clientes_dataframe(df: pd.DataFrame, is_train: bool = True) -> pd
         # Move it to the end
         target = df.pop(target_col)
         df[target_col] = target
+
+    # Optional: align columns for inference
+    if not is_train:
+        # Load train columns if they exist
+        ref_path = "data/processed/train_clean.csv"
+        if os.path.exists(ref_path):
+            ref_cols = pd.read_csv(ref_path, nrows=1).columns
+            for col in ref_cols:
+                if col not in df.columns:
+                    df[col] = 0
+            df = df[ref_cols]
 
     return df
