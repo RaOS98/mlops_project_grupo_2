@@ -7,21 +7,20 @@ on:
       - feature/inference # Change to main
 
 jobs:
-  run-batch-inference:
-    runs-on: ubuntu-latest
-
+  inference-pipeline:
+    runs-on: ubuntu-latest  # Still points to Ubuntu 22.04 (as of mid-2025)
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Python setup
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: 3.11  # <-- Change this line
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
+          pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Configure AWS credentials
@@ -31,6 +30,5 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Run Inference Pipeline
-        run: |
-          PYTHONPATH=. python src/inference/inference_pipeline.py
+      - name: Run inference pipeline
+        run: python src/inference/inference_pipeline.py
