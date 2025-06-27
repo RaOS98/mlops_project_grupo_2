@@ -31,4 +31,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Run inference pipeline
-        run: PYTHONPATH=. python src/inference/inference_pipeline.py
+        run: PYTHONPATH=. python src/batch_inference/inference_pipeline.py
