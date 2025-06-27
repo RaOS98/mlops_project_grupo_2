@@ -5,6 +5,9 @@ import mlflow.pyfunc
 from typing import Optional
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
+import awswrangler as wr
+import boto3
+
 from src.models.train_pipeline import ModelTrainingPipeline
 
 
@@ -12,14 +15,18 @@ class ModelInferencePipeline:
     def __init__(
         self,
         output_path: str = "data/output/predictions.csv",
-        target_metric: str = "roc_auc"
+        s3_output_path: str = "s3://my-batch-inference-data/predictions.csv",
+        target_metric: str = "roc_auc",
+        s3_clientes_path: str = "s3://my-batch-inference-data/oot_clientes_sample.csv",
+        s3_reqs_path: str = "s3://my-batch-inference-data/oot_requerimientos_sample.csv"
     ):
         self.output_path = output_path
+        self.s3_output_path = s3_output_path
         self.target_metric = target_metric
+        self.s3_clientes_path = s3_clientes_path
+        self.s3_reqs_path = s3_reqs_path
 
         self.training_pipeline = ModelTrainingPipeline()
-
-        # Get the best model name and version from MLflow
         self.model_name, self.model_version = self._get_best_model()
         self.model = self._load_model_from_registry()
 
@@ -52,8 +59,12 @@ class ModelInferencePipeline:
         return mlflow.pyfunc.load_model(model_uri)
 
     def run(self):
-        print("Preparing data for inference...")
-        df_processed, y_true = self.training_pipeline.load_and_preprocess_oot_data()
+        print("Downloading OOT data from S3...")
+        clientes = wr.s3.read_csv(self.s3_clientes_path)
+        reqs = wr.s3.read_csv(self.s3_reqs_path)
+
+        df_merged = clientes.merge(reqs, on="ID_CORRELATIVO", how="left")
+        df_processed, y_true = self.training_pipeline.preprocess_oot_dataframe(df_merged)
 
         print("Generating predictions...")
         predictions = self.model.predict(df_processed)
@@ -64,18 +75,23 @@ class ModelInferencePipeline:
             print(" - F1 Score:", f1_score(y_true, predictions))
             print(" - ROC AUC:", roc_auc_score(y_true, predictions))
 
-        clientes = pd.read_csv(self.training_pipeline.clientes_oot_path)
-        reqs = pd.read_csv(self.training_pipeline.reqs_oot_path)
-        df_merged = clientes.merge(reqs, on="ID_CORRELATIVO", how="left")
-
         output = df_merged[["ID_CORRELATIVO"]].copy()
         output["prediction"] = predictions
 
+        # Save locally
         os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
         output.to_csv(self.output_path, index=False)
-        print(f"\nPredictions saved to: {self.output_path}")
+        print(f"\nPredictions saved locally to: {self.output_path}")
+
+        # Save to S3
+        wr.s3.to_csv(df=output, path=self.s3_output_path, index=False)
+        print(f"Predictions uploaded to S3 at: {self.s3_output_path}")
 
 
 if __name__ == "__main__":
-    pipeline = ModelInferencePipeline()
+    pipeline = ModelInferencePipeline(
+        s3_clientes_path="s3://my-batch-inference-data/oot_clientes_sample.csv",
+        s3_reqs_path="s3://my-batch-inference-data/oot_requerimientos_sample.csv",
+        s3_output_path="s3://my-batch-inference-data/predictions.csv"
+    )
     pipeline.run()
