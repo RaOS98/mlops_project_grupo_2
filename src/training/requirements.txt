@@ -4,3 +4,4 @@ scikit-learn
 xgboost
 boto3
 awswrangler
+sagemaker
