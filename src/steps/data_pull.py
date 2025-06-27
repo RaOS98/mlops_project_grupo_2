@@ -2,18 +2,22 @@ from steps.utils import TRACKING_SERVER_ARN, DEFAULT_PATH, SAGEMAKER_ROLE
 from sagemaker.workflow.function_step import step
 from sagemaker import image_uris
 
-@step(
-    name="DataPull",
-    instance_type="ml.m5.large",
-    image_uri = image_uris.retrieve(
+# Properly retrieve the image URI for sklearn
+image_uri = image_uris.retrieve(
     framework="sklearn",
     region="us-east-2",
     version="1.2-1",
     py_version="py3",
     instance_type="ml.m5.large"
-    )
+)
+
+@step(
+    name="DataPull",
+    instance_type="ml.m5.large",
+    image_uri=image_uri,
     role=SAGEMAKER_ROLE,
 )
+
 def data_pull(experiment_name: str, run_name: str, cod_month_start: int, cod_month_end: int) -> tuple[str, str, str]:
     import subprocess
     subprocess.run(['pip', 'install', 'awswrangler==3.9.1', 'mlflow', 'pandas'])
