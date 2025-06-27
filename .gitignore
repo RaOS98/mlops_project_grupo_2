@@ -1,36 +1,5 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*.so
-
-# Virtual environment
-.venv/
-env/
-venv/
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# IDEs & Editors
-.idea/
-.vscode/
-
-# Test & Output artifacts
-out/
-outputs/
-.testing/
-score/
-data/processed/
-data/output/
-
-# MLflow
-mlruns/
-mlruns.db
-
-# MacOS metadata
-.DS_Store
-
-# System files
-Thumbs.db
-
-.pytest_cache/
+.testing
+outputs
+out
+.idea
+score
