@@ -21,6 +21,7 @@ outputs/
 .testing/
 score/
 data/processed/
+data/output/
 
 # MLflow
 mlruns/
@@ -31,3 +32,5 @@ mlruns.db
 
 # System files
 Thumbs.db
+
+.pytest_cache/
