@@ -14,7 +14,7 @@ DEFAULT_PATH = f"s3://{DEFAULT_BUCKET}/{default_prefix}"
 SAGEMAKER_ROLE = "arn:aws:iam::686410906112:role/service-role/SageMaker-MLOpsEngineer"
 
 # ---- MLflow CONFIG ----
-TRACKING_SERVER_ARN = f"arn:aws:sagemaker:us-east-2:686410906112:mlflow-tracking-server/{PROJECT_NAME}-server"
+TRACKING_SERVER_ARN = f"arn:aws:iam::686410906112:role/service-role/AmazonSageMaker-ExecutionRole-20250625T205217"
 
 # ---- PIPELINE & MODEL NAMES ----
 PIPELINE_NAME = f"pipeline-train-{ENV_CODE}-{USERNAME}"
