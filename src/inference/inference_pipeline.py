@@ -6,6 +6,7 @@ from typing import Optional
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 import boto3
+import awswrangler as wr  # <-- this line was missing
 
 from src.training.train_pipeline import ModelTrainingPipeline
 
