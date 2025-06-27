@@ -1,0 +1,7 @@
+mlflow
+pandas
+botocore
+python-dateutil
+s3transfer
+sagemaker
+awswrangler

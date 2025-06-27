@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from src.models.train import ModelTrainingPipeline
+from models.train_pipeline import ModelTrainingPipeline
 
 @pytest.fixture
 def pipeline():
