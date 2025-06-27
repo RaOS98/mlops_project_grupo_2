@@ -1,4 +1,4 @@
-from src.training.train_pipeline import ModelTrainingPipeline
+from train_model import ModelTrainingPipeline
 
 if __name__ == "__main__":
     pipeline = ModelTrainingPipeline()

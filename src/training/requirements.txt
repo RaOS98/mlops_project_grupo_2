@@ -1,7 +1,7 @@
 mlflow
 pandas
-scikit-learn
-xgboost
-boto3
-awswrangler
+botocore
+python-dateutil
+s3transfer
 sagemaker
+awswrangler

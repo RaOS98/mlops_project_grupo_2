@@ -1,7 +1,7 @@
 from src.data.data_pipeline import ChurnDataPipeline
 from src.features.preprocessing_pipeline import PreprocessingPipeline
 from training.train_model import ModelTrainingPipeline
-from src.batch_inference.inference_pipeline import ModelInferencePipeline
+from batch_inference.batch_inference import ModelInferencePipeline
 import pandas as pd
 
 def main():

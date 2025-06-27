@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from batch_inference.inference_pipeline import ModelPredictor
+from batch_inference.batch_inference import ModelPredictor
 
 TEST_CLEAN_PATH = "data/processed/test_clean.csv"
 TRAIN_CLEAN_PATH = "data/processed/train_clean.csv"
