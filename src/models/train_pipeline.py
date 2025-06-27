@@ -24,7 +24,7 @@ class ModelTrainingPipeline:
         self.reqs_oot_path = reqs_oot_path
         self.target_col = target_col
         self.models: Dict[str, object] = {
-            "logistic_regression": LogisticRegression(max_iter=2000),
+            "logistic_regression": LogisticRegression(max_iter=1000),
             "random_forest": RandomForestClassifier(n_estimators=100, random_state=42),
             "xgboost": XGBClassifier(
                 n_estimators=100,

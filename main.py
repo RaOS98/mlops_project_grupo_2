@@ -1,6 +1,7 @@
 from src.data.data_pipeline import ChurnDataPipeline
 from src.features.preprocessing_pipeline import PreprocessingPipeline
 from src.models.train_pipeline import ModelTrainingPipeline
+from src.inference.inference_pipeline import ModelInferencePipeline
 import pandas as pd
 
 def main():
@@ -23,6 +24,10 @@ def main():
     print("\n[3] Training models and evaluating on OOT...")
     trainer = ModelTrainingPipeline()
     trainer.run()
+
+    print("\n[4] Running inference pipeline...")
+    inference = ModelInferencePipeline()
+    inference.run()
 
 if __name__ == "__main__":
     main()
