@@ -5,10 +5,9 @@ import mlflow.pyfunc
 from typing import Optional
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
-import awswrangler as wr
 import boto3
 
-from src.models.train_pipeline import ModelTrainingPipeline
+from src.training.train_pipeline import ModelTrainingPipeline
 
 
 class ModelInferencePipeline:
