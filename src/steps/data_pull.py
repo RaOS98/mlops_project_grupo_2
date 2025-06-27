@@ -1,10 +1,17 @@
 from steps.utils import TRACKING_SERVER_ARN, DEFAULT_PATH, SAGEMAKER_ROLE
 from sagemaker.workflow.function_step import step
+from sagemaker import image_uris
 
 @step(
     name="DataPull",
     instance_type="ml.m5.large",
-    image_uri="686410906112.dkr.ecr.us-east-2.amazonaws.com/sagemaker-scikit-learn:1.2-1-cpu-py3",
+    image_uri = image_uris.retrieve(
+    framework="sklearn",
+    region="us-east-2",
+    version="1.2-1",
+    py_version="py3",
+    instance_type="ml.m5.large"
+    )
     role=SAGEMAKER_ROLE,
 )
 def data_pull(experiment_name: str, run_name: str, cod_month_start: int, cod_month_end: int) -> tuple[str, str, str]:
