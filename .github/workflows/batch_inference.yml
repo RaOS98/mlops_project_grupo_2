@@ -4,7 +4,7 @@ on:
   workflow_dispatch:  # Manual trigger
   push:
     branches:
-      - main
+      - feature/inference # Change to main
 
 jobs:
   run-batch-inference:
