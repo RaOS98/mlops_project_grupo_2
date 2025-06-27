@@ -1,4 +1,4 @@
-from batch_training_utils import TRACKING_SERVER_ARN, SAGEMAKER_ROLE
+from utils import TRACKING_SERVER_ARN, SAGEMAKER_ROLE
 from sagemaker.workflow.function_step import step
 
 # Global configuration
