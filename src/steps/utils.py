@@ -10,11 +10,11 @@ PROJECT_NAME = "bank-attrition"
 default_prefix = f"sagemaker/{PROJECT_NAME}/{USERNAME}"
 DEFAULT_PATH = f"s3://{DEFAULT_BUCKET}/{default_prefix}"
 
-# ---- SAGEMAKER ROLE ----
-SAGEMAKER_ROLE = "arn:aws:iam::686410906112:role/service-role/SageMaker-MLOpsEngineer"
+# Correct role to run pipelines/jobs
+SAGEMAKER_ROLE = "arn:aws:iam::686410906112:role/service-role/AmazonSageMaker-ExecutionRole-20250625T205217"
 
-# ---- MLflow CONFIG ----
-TRACKING_SERVER_ARN = f"arn:aws:iam::686410906112:role/service-role/AmazonSageMaker-ExecutionRole-20250625T205217"
+# Correct MLflow tracking server ARN (must exist in SageMaker)
+TRACKING_SERVER_ARN = "arn:aws:sagemaker:us-east-2:686410906112:mlflow-tracking-server/bank-attrition-server"
 
 # ---- PIPELINE & MODEL NAMES ----
 PIPELINE_NAME = f"pipeline-train-{ENV_CODE}-{USERNAME}"
