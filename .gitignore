@@ -34,3 +34,5 @@ mlruns.db
 Thumbs.db
 
 .pytest_cache/
+.python-version
+*.pem

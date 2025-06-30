@@ -1,10 +1,10 @@
 import os
 import pandas as pd
 
-class PreprocessingPipeline:
-    def __init__(self, target_col: str = "ATTRITION", ref_path: str = "data/processed/train_clean.csv"):
+class PreprocessData:
+    def __init__(self, target_col: str = "ATTRITION", ref_path: str = None):
         self.target_col = target_col
-        self.ref_path = ref_path
+        self.ref_path = ref_path  # Used only when is_train=False to align columns
 
         self.binary_flags = [
             "FLG_BANCARIZADO", "FLG_SEGURO", "FLG_NOMINA", "FLG_SDO_OTSSFF"
@@ -20,8 +20,10 @@ class PreprocessingPipeline:
             "SUBMOTIVO_2"
         ]
 
-    def run(self, df: pd.DataFrame, is_train: bool = True) -> pd.DataFrame:
-        df = df.copy()
+    def run(self, data_path: str, is_train: bool = None) -> tuple[pd.DataFrame, bool]:
+        df = pd.read_csv(data_path)
+        if is_train is None:
+            is_train = self.target_col in df.columns  # Auto-detect if not provided
 
         df = self._drop_unnecessary_columns(df)
         df = self._fill_binary_flags(df)
@@ -35,7 +37,7 @@ class PreprocessingPipeline:
         else:
             df = self._align_with_train_columns(df)
 
-        return df
+        return df, is_train
 
     def _drop_unnecessary_columns(self, df):
         df.drop(columns=[col for col in ["ID_CORRELATIVO", "CODMES"] if col in df.columns], inplace=True)
@@ -81,10 +83,15 @@ class PreprocessingPipeline:
         return df
 
     def _align_with_train_columns(self, df):
-        if os.path.exists(self.ref_path):
+        if self.ref_path and os.path.exists(self.ref_path):
             ref_cols = pd.read_csv(self.ref_path, nrows=1).columns
             for col in ref_cols:
                 if col not in df.columns:
                     df[col] = 0
             df = df[ref_cols]
         return df
+
+
+def transform(data_path: str, is_train: bool = None, ref_path: str = None) -> tuple[pd.DataFrame, bool]:
+    preprocessor = PreprocessData(ref_path=ref_path)
+    return preprocessor.run(data_path=data_path, is_train=is_train)
