@@ -1,15 +1,12 @@
 import os
 import boto3
-from datetime import datetime
 
 from src.utils import DEFAULT_BUCKET
 
-def save_processed_data(df, is_train: bool, output_dir: str = "data/processed"):
-    # Generate timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
+def save_processed_data(df, is_train: bool):
+    output_dir = f"data/processed/{'train' if is_train else 'oot'}"
     # Choose filename
-    filename = f"clean_{'train' if is_train else 'oot'}_data_{timestamp}.csv"
+    filename = f"clean_{'train' if is_train else 'oot'}_data.csv"
     local_path = os.path.join(output_dir, filename)
 
     # Ensure local directory exists
