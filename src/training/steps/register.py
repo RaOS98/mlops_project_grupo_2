@@ -1,5 +1,5 @@
 from sagemaker.workflow.function_step import step
-from src.utils import TRACKING_SERVER_ARN, SAGEMAKER_ROLE
+from src.utils import MLFLOW_URI, SAGEMAKER_ROLE
 from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
 
 @step(
@@ -20,7 +20,7 @@ def register_model(
     import mlflow
 
     # Set up MLflow
-    mlflow.set_tracking_uri(TRACKING_SERVER_ARN)
+    mlflow.set_tracking_uri(MLFLOW_URI)
     mlflow.set_experiment(experiment_name)
 
     with mlflow.start_run(run_id=run_id):

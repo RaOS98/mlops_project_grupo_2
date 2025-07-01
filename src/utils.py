@@ -5,7 +5,7 @@ DEFAULT_BUCKET = "utec-bank-project"
 ENV_CODE = "prod"
 USERNAME = os.getenv("GITHUB_ACTOR", "local-user").lower()
 
-TRACKING_SERVER_ARN = 'arn:aws:sagemaker:us-east-1:654654589924:mlflow-tracking-server/mlops-utec-mlflow-server'
+MLFLOW_URI = "http://18.219.91.131:5000"
 
 # SageMaker role and session
 SAGEMAKER_ROLE = "arn:aws:iam::686410906112:role/service-role/AmazonSageMaker-ExecutionRole-20250625T205217"
