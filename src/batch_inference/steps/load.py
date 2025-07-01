@@ -1,14 +1,10 @@
-from batch_inference_utils import MLFLOW_URI, DEFAULT_PATH, SAGEMAKER_ROLE
 from sagemaker.workflow.function_step import step
-
-# Required for SageMaker
-instance_type = "ml.m5.large"
-image_uri = "885854791233.dkr.ecr.us-east-1.amazonaws.com/sagemaker-distribution-prod@sha256:92cfd41f9293e3cfbf58f3bf728348fbb298bca0eeea44464968f08622d78ed0"
+from src.utils import IMAGE_URI, INSTANCE_TYPE, MLFLOW_URI, DEFAULT_PATH, SAGEMAKER_ROLE
 
 @step(
     name="DataPull",
-    instance_type=instance_type,
-    image_uri=image_uri,
+    instance_type=INSTANCE_TYPE,
+    image_uri=IMAGE_URI,
     role=SAGEMAKER_ROLE,
 )
 def load_and_preprocess_oot(experiment_name: str, run_name: str) -> tuple[str, str, str]:
