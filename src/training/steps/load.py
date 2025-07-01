@@ -1,14 +1,10 @@
 import os
-import re
 import boto3
 import pandas as pd
 import mlflow
-from datetime import datetime
 from sagemaker.workflow.function_step import step
 from src.utils import (
     DEFAULT_BUCKET,
-    sagemaker_session,
-    EXPERIMENT_NAME,
     TRACKING_SERVER_ARN,
     SAGEMAKER_ROLE
 )
@@ -18,46 +14,30 @@ from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
     name="LoadCleanTrainData",
     instance_type=INSTANCE_TYPE,
     image_uri=IMAGE_URI,
-    role=SAGEMAKER_ROLE
+    role=SAGEMAKER_ROLE,
+    dependencies="src/training/requirements.txt"
 )
 def load_train_data(experiment_name: str, run_name: str) -> tuple[str, str, str]:
-    import subprocess
-    subprocess.run(['pip', 'install', 'boto3', 'pandas', 'mlflow'])  # ensure environment has deps
-
-    import boto3
-    import pandas as pd
-    import mlflow
-    import os
-    import re
-    from datetime import datetime
-
     prefix = "data/processed/"
     local_dir = "data/processed"
     os.makedirs(local_dir, exist_ok=True)
 
     s3 = boto3.client("s3")
-    response = s3.list_objects_v2(Bucket=DEFAULT_BUCKET, Prefix=prefix)
-    objects = response.get("Contents", [])
+    file_key = f"{prefix}clean_train_data.csv"
+    local_path = os.path.join(local_dir, "clean_train_data.csv")
 
-    train_files = [
-        obj["Key"]
-        for obj in objects
-        if re.match(rf"{prefix}clean_train_data_\d{{8}}_\d{{6}}\.csv", obj["Key"])
-    ]
+    # Check if file exists in S3
+    response = s3.list_objects_v2(Bucket=DEFAULT_BUCKET, Prefix=file_key)
+    if "Contents" not in response or len(response["Contents"]) == 0:
+        raise FileNotFoundError(f"No file found in S3 at key {file_key}")
 
-    if not train_files:
-        raise FileNotFoundError("No clean_train_data CSV files found in processed/")
+    # Download to local file
+    s3.download_file(DEFAULT_BUCKET, file_key, local_path)
 
-    def extract_timestamp(key):
-        match = re.search(r"clean_train_data_(\d{8}_\d{6})\.csv", key)
-        return datetime.strptime(match.group(1), "%Y%m%d_%H%M%S") if match else datetime.min
-
-    latest_file_key = sorted(train_files, key=extract_timestamp)[-1]
-    local_path = os.path.join(local_dir, "latest_train.csv")
-    s3.download_file(DEFAULT_BUCKET, latest_file_key, local_path)
-
+    # Load into pandas
     df = pd.read_csv(local_path)
 
+    # Set MLflow config
     mlflow.set_tracking_uri(TRACKING_SERVER_ARN)
     mlflow.set_experiment(experiment_name)
 
