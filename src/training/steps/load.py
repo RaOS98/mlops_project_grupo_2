@@ -18,8 +18,8 @@ from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
     dependencies="src/training/requirements.txt"
 )
 def load_train_data(experiment_name: str, run_name: str) -> tuple[str, str, str]:
-    prefix = "data/processed/"
-    local_dir = "data/processed"
+    prefix = "data/processed/train"
+    local_dir = "data/processed/train"
     os.makedirs(local_dir, exist_ok=True)
 
     s3 = boto3.client("s3")
