@@ -20,8 +20,8 @@ out/
 outputs/
 .testing/
 score/
-data/processed/
-data/output/
+data/processed/*
+data/temp/*
 
 # MLflow
 mlruns/

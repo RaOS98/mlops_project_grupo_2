@@ -1,0 +1,6 @@
+sagemaker==2.247.1
+boto3
+pandas
+scikit-learn
+mlflow
+joblib
