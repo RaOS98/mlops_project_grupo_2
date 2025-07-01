@@ -18,7 +18,8 @@ sagemaker_session = sagemaker.Session(
 )
 
 # Resource naming
-PIPELINE_NAME = f"pipeline-preprocessing-{ENV_CODE}-{USERNAME}"
+# PIPELINE_NAME = f"pipeline-preprocessing-{ENV_CODE}-{USERNAME}"
+PIPELINE_NAME_TRAINING = f"pipeline-training-{ENV_CODE}-{USERNAME}"
 MODEL_NAME = f"{DEFAULT_BUCKET}-{USERNAME}"
 
 EXPERIMENT_NAME = "utec-bank"
