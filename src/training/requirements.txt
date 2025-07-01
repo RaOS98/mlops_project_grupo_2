@@ -1,7 +1,8 @@
-mlflow
+sagemaker==2.247.1
+boto3
 pandas
-botocore
-python-dateutil
-s3transfer
-sagemaker
-awswrangler
+scikit-learn
+mlflow
+joblib
+mlflow[data]>=2.2.0
+pyarrow
