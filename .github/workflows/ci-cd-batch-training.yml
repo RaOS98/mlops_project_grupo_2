@@ -18,7 +18,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install -r operation/batch_training/requirements.txt
+          pip install -r src/batch_training/requirements.txt
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -26,6 +26,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.SECRET_KEY }}
           aws-region: us-east-1
       - name: Create training pipeline
-        run: python operation/batch_training/training_pipeline.py
+        run: python src/batch_training/training_pipeline.py
         env:
           GITHUB_ACTOR: ${{ github.actor }}
