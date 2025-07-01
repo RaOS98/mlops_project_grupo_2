@@ -24,7 +24,7 @@ def main():
     merged_df = merge_raw_data(clientes_df, requerimientos_df)
 
     # Save intermediate merged version (must happen BEFORE transform step)
-    temp_path = "data/processed/temp_merged.csv"
+    temp_path = "data/temp/temp_merged.csv"
     merged_df.to_csv(temp_path, index=False)
 
     print("STEP 3: Running preprocessing...")

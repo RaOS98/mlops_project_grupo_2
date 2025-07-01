@@ -19,7 +19,7 @@ print(f"Using pipeline name: {PIPELINE_NAME_TRAINING}")
 pipeline = Pipeline(
     name=PIPELINE_NAME_TRAINING,
     parameters=[],
-    steps=[load_step]
+    steps=[load_step]pyth
 )
 
 response = pipeline.upsert(role_arn=SAGEMAKER_ROLE)

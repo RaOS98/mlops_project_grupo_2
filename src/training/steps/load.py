@@ -18,7 +18,7 @@ from sagemaker import image_uris
 IMAGE_URI = image_uris.retrieve(
     framework="xgboost",
     region="us-east-2",
-    version="1.7-1"
+    version="1.3-1"
 )
 
 # SageMaker step config
