@@ -7,16 +7,7 @@ from src.utils import (
     TRACKING_SERVER_ARN,
     DEFAULT_BUCKET
 )
-
-# You can retrieve the SageMaker-provided XGBoost image dynamically
-from sagemaker import image_uris
-IMAGE_URI = image_uris.retrieve(
-    framework="xgboost",
-    region="us-east-2",
-    version="1.3-1"
-)
-
-INSTANCE_TYPE = "ml.m5.large"
+from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
 
 @step(
     name="TrainModel",

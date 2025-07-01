@@ -1,9 +1,6 @@
 from src.utils import TRACKING_SERVER_ARN, SAGEMAKER_ROLE
 from sagemaker.workflow.function_step import step
-
-# Constants
-INSTANCE_TYPE = "ml.m5.large"
-IMAGE_URI = "885854791233.dkr.ecr.us-east-1.amazonaws.com/sagemaker-distribution-prod@sha256:92cfd41f9293e3cfbf58f3bf728348fbb298bca0eeea44464968f08622d78ed0"
+from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
 
 @step(
     name="ModelEvaluation",
