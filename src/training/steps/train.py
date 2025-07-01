@@ -4,7 +4,7 @@ import mlflow
 from sagemaker.workflow.function_step import step
 from src.utils import (
     SAGEMAKER_ROLE,
-    TRACKING_SERVER_ARN,
+    MLFLOW_URI,
     DEFAULT_BUCKET
 )
 from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
@@ -28,7 +28,7 @@ def train_model(train_s3_path: str, experiment_name: str, run_id: str) -> tuple[
     SEED = 42
     TRAIN_SPLIT = 0.7
 
-    mlflow.set_tracking_uri(TRACKING_SERVER_ARN)
+    mlflow.set_tracking_uri(MLFLOW_URI)
     mlflow.set_experiment(experiment_name)
 
     df = pd.read_csv(train_s3_path)
