@@ -2,12 +2,12 @@ import os
 import pandas as pd
 import mlflow
 from sagemaker.workflow.function_step import step
-from src.utils import (
+from utils import (
     SAGEMAKER_ROLE,
     MLFLOW_URI,
     DEFAULT_BUCKET
 )
-from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
+from training.config import (INSTANCE_TYPE, IMAGE_URI)
 
 @step(
     name="TrainModel",

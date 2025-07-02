@@ -4,7 +4,7 @@ import mlflow
 import pandas as pd
 from datetime import datetime
 
-from src.utils import DEFAULT_BUCKET
+from utils import DEFAULT_BUCKET
 
 def load_raw_data(raw_data_paths: dict, experiment_name: str, run_name: str = None) -> dict:
     def detect_data_source(paths: dict) -> str:

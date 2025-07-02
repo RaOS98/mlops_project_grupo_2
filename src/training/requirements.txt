@@ -6,3 +6,4 @@ mlflow
 joblib
 mlflow[data]>=2.2.0
 pyarrow
+awswrangler
