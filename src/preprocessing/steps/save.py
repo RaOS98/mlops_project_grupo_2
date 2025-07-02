@@ -2,7 +2,7 @@ import os
 import boto3
 from datetime import datetime
 
-from src.utils import DEFAULT_BUCKET
+from utils import DEFAULT_BUCKET
 
 def save_processed_data(df, is_train: bool, output_dir: str = "data/processed"):
     # Generate timestamp

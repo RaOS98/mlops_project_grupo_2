@@ -1,6 +1,6 @@
-from src.utils import MLFLOW_URI, SAGEMAKER_ROLE
+from utils import MLFLOW_URI, SAGEMAKER_ROLE
 from sagemaker.workflow.function_step import step
-from src.training.config import (INSTANCE_TYPE, IMAGE_URI)
+from training.config import (INSTANCE_TYPE, IMAGE_URI)
 
 @step(
     name="ModelEvaluation",
