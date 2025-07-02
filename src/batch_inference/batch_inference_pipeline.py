@@ -1,4 +1,5 @@
 from sagemaker.workflow.pipeline import Pipeline
+from sagemaker.workflow.execution_variables import ExecutionVariables
 from sagemaker.workflow.parameters import ParameterString, ParameterInteger
 from sagemaker.workflow.steps import ProcessingStep, FunctionStep
 
@@ -7,52 +8,44 @@ from src.batch_inference.steps.inference import model_inference
 from src.batch_inference.steps.push import data_push
 from src.utils import PIPELINE_NAME, SAGEMAKER_SESSION, SAGEMAKER_ROLE
 
-def get_batch_inference_pipeline() -> Pipeline:
-    # Parameters
-    experiment_name = ParameterString(name="ExperimentName", default_value="batch-inference-experiment")
-    run_name = ParameterString(name="RunName", default_value="oot-run")
-    codmes = ParameterInteger(name="PeriodoCarga", default_value=202403)
 
-    # Step 1: Load + Preprocess OOT data
-    load_step = FunctionStep(
-        name="DataPull",
-        step_func=load_and_preprocess_oot,
-        inputs={
-            "experiment_name": experiment_name,
-            "run_name": run_name
-        }
-    )
+experiment_name = ParameterString(name="ExperimentName", default_value="batch-inference-experiment")
 
-    # Step 2: Run model inference
-    inference_step = FunctionStep(
-        name="ModelInference",
-        step_func=model_inference,
-        inputs={
-            "inf_raw_s3_path": load_step.properties.Outputs["s3_path"],
-            "experiment_name": load_step.properties.Outputs["experiment_name"],
-            "run_id": load_step.properties.Outputs["run_id"]
-        }
-    )
+# Step 1: Load + Preprocess OOT data
+data_pull_step = load_and_preprocess_oot(
+    experiment_name=experiment_name,
+        run_name=ExecutionVariables.PIPELINE_EXECUTION_ID,
+)
 
-    # Step 3: Post-process + save results
-    push_step = FunctionStep(
-        name="DataPush",
-        step_func=data_push,
-        inputs={
-            "inf_proc_s3_path": inference_step.properties.Outputs["s3_path"],
-            "experiment_name": inference_step.properties.Outputs["experiment_name"],
-            "run_id": inference_step.properties.Outputs["run_id"],
-            "codmes": codmes
-        }
-    )
+# Step 2: Run model inference
+inference_step = FunctionStep(
+    name="ModelInference",
+    step_func=model_inference,
+    inputs={
+        "inf_raw_s3_path": load_step.properties.Outputs["s3_path"],
+        "experiment_name": load_step.properties.Outputs["experiment_name"],
+        "run_id": load_step.properties.Outputs["run_id"]
+    }
+)
 
-    # Build pipeline
-    pipeline = Pipeline(
-        name=PIPELINE_NAME,
-        parameters=[experiment_name, run_name, codmes],
-        steps=[load_step, inference_step, push_step],
-        sagemaker_session=SAGEMAKER_SESSION,
-        role=SAGEMAKER_ROLE
-    )
+# Step 3: Post-process + save results
+push_step = FunctionStep(
+    name="DataPush",
+    step_func=data_push,
+    inputs={
+        "inf_proc_s3_path": inference_step.properties.Outputs["s3_path"],
+        "experiment_name": inference_step.properties.Outputs["experiment_name"],
+        "run_id": inference_step.properties.Outputs["run_id"]
+    }
+)
 
-    return pipeline
+# Build pipeline
+pipeline = Pipeline(
+    name=PIPELINE_NAME,
+    parameters=[experiment_name, run_name,
+    steps=[load_step, inference_step, push_step],
+    sagemaker_session=SAGEMAKER_SESSION,
+    role=SAGEMAKER_ROLE
+)
+
+pipeline.upsert(role_arn=SAGEMAKER_ROLE)
